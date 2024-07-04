@@ -76,6 +76,8 @@ class Execution():
         sent0_output: list[GaussOutput] = []
         sent1_output: list[GaussOutput] = []
 
+        scores: torch.FloatTensor = torch.FloatTensor()
+
         if split == "val":
             data_loader: DataLoader = self.gauss_data.val_dataloader
         
@@ -86,10 +88,13 @@ class Execution():
             with torch.cuda.amp.autocast(dtype=DTYPE):
                 sent0_out = self.model.forward(**batch.to(DEVICE).sent0)
                 sent1_out = self.model.forward(**batch.to(DEVICE).sent1)
-                scores = batch.to(DEVICE).score
+                scores = torch.cat([scores, (batch.to(DEVICE).score)], dim=0)
 
             sent0_output.append(sent0_out)
             sent1_output.append(sent1_out)
+
+        print(f"sent0_output: {sent0_output}")
+        print(f"sent1_output: {sent1_output}")
 
         output0: GaussOutput = GaussOutput(mu=torch.cat([out.mu for out in sent0_output], dim=0), std=torch.cat([out.std for out in sent0_output], dim=0))
         output1: GaussOutput = GaussOutput(mu=torch.cat([out.mu for out in sent1_output], dim=0), std=torch.cat([out.std for out in sent1_output], dim=0))
