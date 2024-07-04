@@ -10,7 +10,7 @@ from scipy.stats import spearmanr
 
 from gauss_model import GaussModel, GaussOutput
 from parameters import BATCH_SIZE, LR, NUM_WORKERS, MAX_SEQ_LEN, DTYPE, DEVICE, MODEL_NAME, INPUT_FILE_PATH, OUTPUT_DIRECTORY_PATH, WEIGHT_DECAY, EPOCHS, NUM_WARMUP_RATIO
-from utils.GaussData import GaussData
+from utils.gauss_data import GaussData
 from utils.log_info import log_info
 from utils.similarity import asymmetrical_kl_sim
 
@@ -38,8 +38,6 @@ class Execution():
                 "score": torch.FloatTensor([float(d["score"]) for d in data_list]),
             }
         )
-    
-    import torch
 
     def create_optimizer(self, model: torch.nn.Module, train_steps_per_epoch: int) -> tuple[torch.optim.Optimizer, torch.optim.lr_scheduler.LambdaLR]:
             no_decay = {"bias", "LayerNorm.weight"}
@@ -100,11 +98,6 @@ class Execution():
         spearman = float(spearmanr(scores.to("cpu").abs(), similarities.to("cpu"))[0]) * 100
 
         return spearman
-    
-    
-    
-    
-    
     
     @torch.inference_mode()
     def encode_fn(self, sentences: list[str], **_) -> GaussOutput:
