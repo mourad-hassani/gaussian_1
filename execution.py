@@ -70,7 +70,7 @@ class Execution():
             return optimizer, lr_scheduler
 
     @torch.inference_mode()
-    def evaluator(self, split: str = "val") -> None:
+    def evaluator(self, split: str = "val") -> float:
         self.model.eval()
 
         sent0_output: list[GaussOutput] = []

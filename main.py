@@ -11,6 +11,7 @@ from utils.save import save_json
 
 def main():
     set_seed()
+    
     execution = Execution()
 
     best_dev_score = execution.evaluator()
@@ -31,7 +32,7 @@ def main():
         train_losses = []
         execution.model.train()
 
-        for batch in tqdm(execution.train_dataloader, total=len(execution.train_dataloader), dynamic_ncols=True, leave=False, desc="Step"):
+        for batch in tqdm(execution.gauss_data.train_dataloader, total=len(execution.gauss_data.train_dataloader), dynamic_ncols=True, leave=False, desc="Step"):
             current_step += 1
             batch: BatchEncoding = batch.to(DEVICE)
 
