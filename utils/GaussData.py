@@ -12,7 +12,7 @@ class GaussData:
 
         # self.dataset is of the form : [{"sent0": "...", "sent1": "...", "score": ...}]
         self.dataset = pd.read_csv(str(file_path)).to_dict("records")
-        self.dataset_length = len(self.train_dataset)
+        self.dataset_length = len(self.dataset)
 
         self.train_dataset = self.dataset[:(0.9 * self.dataset_length)]
         self.val_dataset = self.dataset[(0.9 * self.dataset_length):(0.95 * self.dataset_length)]
