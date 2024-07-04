@@ -41,7 +41,7 @@ class Execution():
     
     import torch
 
-    def create_optimizer(model: torch.nn.Module, train_steps_per_epoch: int) -> tuple[torch.optim.Optimizer, torch.optim.lr_scheduler.LambdaLR]:
+    def create_optimizer(self, model: torch.nn.Module, train_steps_per_epoch: int) -> tuple[torch.optim.Optimizer, torch.optim.lr_scheduler.LambdaLR]:
             no_decay = {"bias", "LayerNorm.weight"}
             optimizer_grouped_parameters = [
                 {
