@@ -78,10 +78,9 @@ class Execution():
 
         scores: torch.FloatTensor = torch.FloatTensor()
 
-        if split == "val":
-            data_loader: DataLoader = self.gauss_data.val_dataloader
+        data_loader: DataLoader = self.gauss_data.val_dataloader
         
-        elif split == "train":
+        if split == "train":
             data_loader: DataLoader = self.gauss_data.train_dataloader
 
         for batch in data_loader:
