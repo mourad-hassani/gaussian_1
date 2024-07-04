@@ -97,7 +97,7 @@ class Execution():
 
         similarities = asymmetrical_kl_sim(output0.mu, output0.std, output1.mu, output1.std)
 
-        spearman = float(spearmanr(scores.to("cpu"), similarities.to("cpu"))[0]) * 100
+        spearman = float(spearmanr(scores.to("cpu").abs(), similarities.to("cpu"))[0]) * 100
 
         return spearman
     
