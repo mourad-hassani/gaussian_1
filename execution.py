@@ -84,6 +84,7 @@ class Execution():
             data_loader: DataLoader = self.gauss_data.train_dataloader
 
         for batch in data_loader:
+            print("hello")
             with torch.cuda.amp.autocast(dtype=DTYPE):
                 print(f"batch.sent0: {batch.sent0}")
                 sent0_out = self.model.forward(**batch.to(DEVICE).sent0)

@@ -3,7 +3,7 @@ import torch
 
 MODEL_NAME: str = "prajjwal1/bert-small"
 
-BATCH_SIZE: int = 64
+BATCH_SIZE: int = 4
 SHUFFLE: bool = False
 NUM_WORKERS: int = 4
 DROP_lAST: bool = True

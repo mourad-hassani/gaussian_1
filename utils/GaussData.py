@@ -12,14 +12,11 @@ class GaussData:
 
         # self.dataset is of the form : [{"sent0": "...", "sent1": "...", "score": ...}]
         self.dataset = pd.read_csv(str(file_path)).to_dict("records")
-        print(f"self.dataset: {self.dataset}")
         self.dataset_length = len(self.dataset)
 
         self.train_dataset = self.dataset[:int(0.9 * self.dataset_length)]
         self.val_dataset = self.dataset[int(0.9 * self.dataset_length):int(0.95 * self.dataset_length)]
         self.test_dataset = self.dataset[int(0.95 * self.dataset_length):]
-
-        print(f"self.val_dataset: {self.val_dataset}")
 
         self.train_dataloader = DataLoader(self.train_dataset, collate_fn=self.collate_fn, batch_size=BATCH_SIZE, shuffle=SHUFFLE, num_workers=NUM_WORKERS, pin_memory=True, drop_last=DROP_lAST)
         self.val_dataloader = DataLoader(self.val_dataset, collate_fn=self.collate_fn, batch_size=BATCH_SIZE, shuffle=SHUFFLE, num_workers=NUM_WORKERS, pin_memory=True, drop_last=DROP_lAST)
