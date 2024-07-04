@@ -86,6 +86,7 @@ class Execution():
 
         for batch in data_loader:
             with torch.cuda.amp.autocast(dtype=DTYPE):
+                print(f"batch.sent0: {batch.sent0}")
                 sent0_out = self.model.forward(**batch.to(DEVICE).sent0)
                 sent1_out = self.model.forward(**batch.to(DEVICE).sent1)
                 scores = torch.cat([scores, (batch.to(DEVICE).score)], dim=0)
