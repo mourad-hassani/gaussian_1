@@ -76,7 +76,7 @@ class Execution():
         sent0_output: list[GaussOutput] = []
         sent1_output: list[GaussOutput] = []
 
-        scores: torch.FloatTensor = torch.FloatTensor(device=DEVICE)
+        scores: torch.FloatTensor = torch.FloatTensor()
 
         data_loader: DataLoader = self.gauss_data.val_dataloader
         
@@ -87,7 +87,7 @@ class Execution():
             with torch.cuda.amp.autocast(dtype=DTYPE):
                 sent0_out = self.model.forward(**batch.to(DEVICE).sent0)
                 sent1_out = self.model.forward(**batch.to(DEVICE).sent1)
-                scores = torch.cat([scores, (batch.to(DEVICE).score)], dim=0)
+                scores = torch.cat([scores.to(DEVICE), (batch.to(DEVICE).score)], dim=0)
 
             sent0_output.append(sent0_out)
             sent1_output.append(sent1_out)
