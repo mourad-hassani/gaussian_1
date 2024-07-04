@@ -95,7 +95,7 @@ class Execution():
         output0: GaussOutput = GaussOutput(mu=torch.cat([out.mu for out in sent0_output], dim=0), std=torch.cat([out.std for out in sent0_output], dim=0))
         output1: GaussOutput = GaussOutput(mu=torch.cat([out.mu for out in sent1_output], dim=0), std=torch.cat([out.std for out in sent1_output], dim=0))
 
-        similarities = asymmetrical_kl_sim(output0.mu, output0.std, output1.mu, output1.std)
+        similarities = asymmetrical_kl_sim(output0.mu, output0.std, output1.mu, output1.std).to(DEVICE)
 
         spearman = float(spearmanr(scores, similarities)[0]) * 100
 
