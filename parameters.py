@@ -21,3 +21,5 @@ NUM_EVAL_STEPS: int = 1000
 
 INPUT_FILE_PATH: str = Path("data/dates_dataset/dataset.csv")
 OUTPUT_DIRECTORY_PATH: Path = Path("output")
+
+SPECIAL_TOKENS: bool = True

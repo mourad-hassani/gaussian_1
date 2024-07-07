@@ -4,7 +4,7 @@ from transformers.tokenization_utils import BatchEncoding, PreTrainedTokenizer
 from transformers import AutoTokenizer
 
 from gauss_model import GaussModel, GaussOutput
-from parameters import MODEL_NAME, INFERENCE_DEVICE, BATCH_SIZE, NUM_WORKERS, MAX_SEQ_LEN, INPUT_FILE_PATH
+from parameters import MODEL_NAME, INFERENCE_DEVICE, BATCH_SIZE, NUM_WORKERS, MAX_SEQ_LEN, INPUT_FILE_PATH, SPECIAL_TOKENS
 
 class Inference:
     def __init__(self):
@@ -13,12 +13,12 @@ class Inference:
 
         self.tokenizer: PreTrainedTokenizer = AutoTokenizer.from_pretrained(MODEL_NAME, model_max_length = MAX_SEQ_LEN, use_fast = False)
         
-        self.sentences1 = ["[CLS] 25 may 2023 [SEP] 02 september 2024 [SEP]"]
-        self.sentences2 = ["[CLS] 25 november 2023 [SEP] 13 august 2024 [SEP]"]
-        self.scores = [-0.9999999795820788]
+        self.sentences1 = ["[CLS] 2023 [SEP] 02 september 2024 [SEP]"]
+        self.sentences2 = ["[CLS] 15 september 2024 [SEP] 13 august 2024 [SEP]"]
+        self.scores = [0.0]
 
     def tokenize(self, batch: list[str]) -> BatchEncoding:
-        return self.tokenizer(batch, padding=True, truncation=True, return_tensors="pt", max_length=MAX_SEQ_LEN, add_special_tokens=False)
+        return self.tokenizer(batch, padding=True, truncation=True, return_tensors="pt", max_length=MAX_SEQ_LEN, add_special_tokens=SPECIAL_TOKENS)
     
     def data_loader(self, sentences: list[str]):
         return DataLoader(sentences, collate_fn=self.tokenize, batch_size=BATCH_SIZE, shuffle=False, num_workers=NUM_WORKERS, pin_memory=True, drop_last=False)

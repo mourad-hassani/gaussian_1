@@ -4,7 +4,7 @@ import torch
 from torch.utils.data import DataLoader
 from transformers.tokenization_utils import BatchEncoding, PreTrainedTokenizer
 
-from parameters import INPUT_FILE_PATH, SHUFFLE, BATCH_SIZE, NUM_WORKERS, DROP_lAST, MAX_SEQ_LEN
+from parameters import INPUT_FILE_PATH, SHUFFLE, BATCH_SIZE, NUM_WORKERS, DROP_lAST, MAX_SEQ_LEN, SPECIAL_TOKENS
 
 class GaussData:
     def __init__(self, file_path: Path, tokenizer: PreTrainedTokenizer):
@@ -23,7 +23,7 @@ class GaussData:
         self.test_dataloader = DataLoader(self.test_dataset, collate_fn=self.collate_fn, batch_size=BATCH_SIZE, shuffle=SHUFFLE, num_workers=NUM_WORKERS, pin_memory=True, drop_last=DROP_lAST)
     
     def tokenize(self, batch: list[str]) -> BatchEncoding:
-        return self.tokenizer(batch, padding=True, truncation=True, return_tensors="pt", max_length=MAX_SEQ_LEN, add_special_tokens=False)
+        return self.tokenizer(batch, padding=True, truncation=True, return_tensors="pt", max_length=MAX_SEQ_LEN, add_special_tokens=SPECIAL_TOKENS)
     
     def collate_fn(self, data_list: list[dict]) -> BatchEncoding:
         """

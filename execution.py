@@ -9,7 +9,7 @@ from transformers.optimization import get_linear_schedule_with_warmup
 from scipy.stats import spearmanr
 
 from gauss_model import GaussModel, GaussOutput
-from parameters import BATCH_SIZE, LR, NUM_WORKERS, MAX_SEQ_LEN, DTYPE, DEVICE, MODEL_NAME, INPUT_FILE_PATH, OUTPUT_DIRECTORY_PATH, WEIGHT_DECAY, EPOCHS, NUM_WARMUP_RATIO
+from parameters import BATCH_SIZE, LR, NUM_WORKERS, MAX_SEQ_LEN, DTYPE, DEVICE, MODEL_NAME, INPUT_FILE_PATH, OUTPUT_DIRECTORY_PATH, WEIGHT_DECAY, EPOCHS, NUM_WARMUP_RATIO, SPECIAL_TOKENS
 from utils.gauss_data import GaussData
 from utils.log_info import log_info
 from utils.similarity import asymmetrical_kl_sim
@@ -24,7 +24,7 @@ class Execution():
         self.optimizer, self.lr_scheduler = self.create_optimizer(model=self.model, train_steps_per_epoch=len(self.gauss_data.train_dataloader))
 
     def tokenize(self, batch: list[str]) -> BatchEncoding:
-        return self.tokenizer(batch, padding=True, truncation=True, return_tensors="pt", max_length=MAX_SEQ_LEN, add_special_tokens=False)
+        return self.tokenizer(batch, padding=True, truncation=True, return_tensors="pt", max_length=MAX_SEQ_LEN, add_special_tokens=SPECIAL_TOKENS)
     
     def collate_fn(self, data_list: list[dict]) -> BatchEncoding:
         """
