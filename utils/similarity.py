@@ -14,7 +14,7 @@ def asymmetrical_kl_sim(mu1: torch.FloatTensor, std1: torch.FloatTensor, mu2: to
     upper_bound2: torch.FloatTensor = mu2 + (3 * std2)
 
     is_in: bool = False
-    if lower_bound2 <= lower_bound1 and upper_bound1 <= upper_bound2:
+    if (lower_bound2 <= lower_bound1).all() and (upper_bound1 <= upper_bound2).all():
         is_in = True
 
     p1 = distributions.normal.Normal(mu1, std1)
