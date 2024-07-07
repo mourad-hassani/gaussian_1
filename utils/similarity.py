@@ -24,7 +24,7 @@ def asymmetrical_kl_sim(mu1: torch.FloatTensor, std1: torch.FloatTensor, mu2: to
     
     similarity = sim.mean(dim=-1)
 
-    similarity = torch.nn.Tanh(similarity)
+    similarity = torch.tanh(similarity)
 
     if is_in:
         return -similarity
