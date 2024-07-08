@@ -5,6 +5,7 @@ from transformers import AutoTokenizer
 
 from gauss_model import GaussModel, GaussOutput
 from parameters import MODEL_NAME, INFERENCE_DEVICE, BATCH_SIZE, NUM_WORKERS, MAX_SEQ_LEN, INPUT_FILE_PATH, SPECIAL_TOKENS
+from utils.similarity import asymmetrical_kl_sim
 
 class Inference:
     def __init__(self):
@@ -13,9 +14,9 @@ class Inference:
 
         self.tokenizer: PreTrainedTokenizer = AutoTokenizer.from_pretrained(MODEL_NAME, model_max_length = MAX_SEQ_LEN, use_fast = False)
         
-        self.sentences1 = ["2023"]
-        self.sentences2 = ["15 september 2023"]
-        self.scores = [0.0]
+        self.sentences1 = ["10 september 2023", "11 september 2023", "13 september 2023", "15 september 2023", "15 march 2023"]
+        self.sentences2 = ["12 september 2023"] * len(self.sentences1)
+        self.scores = [0.0] * len(self.sentences1)
 
     def tokenize(self, batch: list[str]) -> BatchEncoding:
         return self.tokenizer(batch, padding=True, truncation=True, return_tensors="pt", max_length=MAX_SEQ_LEN, add_special_tokens=SPECIAL_TOKENS)
@@ -27,7 +28,7 @@ class Inference:
     def sim_fn(self, sent1: str, sent2: str) -> float:
             sent1: GaussOutput = self.encode_fn(sent1)
             sent2: GaussOutput = self.encode_fn(sent2)
-            return self.asymmetrical_kl_sim(sent1.mu, sent1.std, sent2.mu, sent2.std)
+            return asymmetrical_kl_sim(sent1.mu, sent1.std, sent2.mu, sent2.std).item()
 
     @torch.inference_mode()
     def encode_fn(self, sentence: str, **_) -> GaussOutput:
@@ -49,10 +50,3 @@ class Inference:
             similarities.append(self.sim_fn(sent1, sent2))
         
         return {"sent1": self.sentences1, "sent2": self.sentences2, "similarity": similarities, "ground_truth": self.scores}
-
-    def asymmetrical_kl_sim(self, mu1: torch.FloatTensor, std1: torch.FloatTensor, mu2: torch.FloatTensor, std2: torch.FloatTensor) -> float:
-        p1 = torch.distributions.normal.Normal(mu1, std1)
-        p2 = torch.distributions.normal.Normal(mu2, std2)
-        sim = 1 / (1 + torch.distributions.kl.kl_divergence(p1, p2))
-
-        return float(sim.mean(dim=-1))
