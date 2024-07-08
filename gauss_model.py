@@ -28,8 +28,7 @@ class GaussModel(nn.Module):
     def forward(self, input_ids, attention_mask, **_) -> GaussOutput:
         outputs: BaseModelOutput = self.backbone(input_ids=input_ids, attention_mask=attention_mask)
 
-        # last_hidden_state (torch.FloatTensor of shape (batch_size, sequence_length, hidden_size)) — Sequence of hidden-states at the output of the last layer of the model.
-        emb = outputs.last_hidden_state[:, 0]
+        emb = self.mean_pooling(outputs, attention_mask)
 
         mu = self.w_mu(emb)
         mu = self.activation(mu)
@@ -38,3 +37,8 @@ class GaussModel(nn.Module):
         std = torch.sqrt(log_var.exp())
 
         return GaussOutput(mu=mu, std=std)
+    
+    def mean_pooling(self, model_output, attention_mask):
+        token_embeddings = model_output[0] #First element of model_output contains all token embeddings
+        input_mask_expanded = attention_mask.unsqueeze(-1).expand(token_embeddings.size()).float()
+        return torch.sum(token_embeddings * input_mask_expanded, 1) / torch.clamp(input_mask_expanded.sum(1), min=1e-9)

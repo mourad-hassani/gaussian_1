@@ -13,8 +13,8 @@ class Inference:
 
         self.tokenizer: PreTrainedTokenizer = AutoTokenizer.from_pretrained(MODEL_NAME, model_max_length = MAX_SEQ_LEN, use_fast = False)
         
-        self.sentences1 = ["[CLS] 2023 [SEP] 02 september 2024 [SEP]"]
-        self.sentences2 = ["[CLS] 15 september 2024 [SEP] 13 august 2024 [SEP]"]
+        self.sentences1 = ["2023"]
+        self.sentences2 = ["15 september 2023"]
         self.scores = [0.0]
 
     def tokenize(self, batch: list[str]) -> BatchEncoding:
