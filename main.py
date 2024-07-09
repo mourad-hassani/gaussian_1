@@ -44,7 +44,7 @@ def main():
             sim_mat = sim_mat / TEMPERATURE
 
             criterion = nn.MSELoss()
-            loss = criterion(sim_mat, batch.score.abs())
+            loss = criterion(sim_mat, batch.score)
 
             train_losses.append(loss.item())
 
