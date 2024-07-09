@@ -8,6 +8,7 @@ from gauss_model import GaussOutput
 from utils.similarity import asymmetrical_kl_sim
 import torch.nn as nn
 from utils.save import save_json
+from utils.loss.cosent_loss import CoSentLoss
 
 def main():
     set_seed()
@@ -43,7 +44,7 @@ def main():
             sim_mat: torch.FloatTensor = asymmetrical_kl_sim(sent0_out.mu, sent0_out.std, sent1_out.mu, sent1_out.std)
             sim_mat = sim_mat / TEMPERATURE
 
-            criterion = nn.MSELoss()
+            criterion = CoSentLoss()
             loss = criterion(sim_mat, batch.score)
 
             train_losses.append(loss.item())
