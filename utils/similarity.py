@@ -2,6 +2,8 @@ from gauss_model import GaussOutput
 import torch
 from torch import distributions
 
+from utils.math.tanh import tanh
+
 def asymmetrical_kl_sim(mu1: torch.FloatTensor, std1: torch.FloatTensor, mu2: torch.FloatTensor, std2: torch.FloatTensor) -> torch.Tensor:
     """
     Computes the KL similarity between two normal distributions and returns a tensor with shape (batch_size)
@@ -20,13 +22,10 @@ def asymmetrical_kl_sim(mu1: torch.FloatTensor, std1: torch.FloatTensor, mu2: to
     p1 = distributions.normal.Normal(mu1, std1)
     p2 = distributions.normal.Normal(mu2, std2)
 
-    sim = distributions.kl.kl_divergence(p1, p2)
-    
-    similarity = sim.mean(dim=-1)
-
-    similarity = torch.tanh(similarity)
+    distance = distributions.kl.kl_divergence(p1, p2).mean(dim=-1)  
+    distance = torch.tanh(0.5 * distance)
 
     if is_in:
-        return -similarity
+        return -distance
     
-    return similarity
+    return distance
