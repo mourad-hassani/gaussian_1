@@ -42,9 +42,9 @@ def main():
                 sent1_out: GaussOutput = execution.model.forward(**batch.sent1)
 
             sim_mat: torch.FloatTensor = asymmetrical_kl_sim(sent0_out.mu, sent0_out.std, sent1_out.mu, sent1_out.std)
-            sim_mat = sim_mat / TEMPERATURE
+            # sim_mat = sim_mat / TEMPERATURE
 
-            criterion = CoSentLoss()
+            criterion = nn.MSELoss()
             loss = criterion(sim_mat, batch.score)
 
             train_losses.append(loss.item())

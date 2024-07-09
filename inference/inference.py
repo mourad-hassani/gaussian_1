@@ -4,7 +4,7 @@ from transformers.tokenization_utils import BatchEncoding, PreTrainedTokenizer
 from transformers import AutoTokenizer
 
 from gauss_model import GaussModel, GaussOutput
-from parameters import MODEL_NAME, INFERENCE_DEVICE, BATCH_SIZE, NUM_WORKERS, MAX_SEQ_LEN, INPUT_FILE_PATH, SPECIAL_TOKENS
+from parameters import MODEL_NAME, INFERENCE_DEVICE, BATCH_SIZE, NUM_WORKERS, MAX_SEQ_LEN, INPUT_FILE_PATH, SPECIAL_TOKENS, TEMPERATURE
 from utils.similarity import asymmetrical_kl_sim
 
 class Inference:
@@ -28,7 +28,7 @@ class Inference:
     def sim_fn(self, sent1: str, sent2: str) -> float:
             sent1: GaussOutput = self.encode_fn(sent1)
             sent2: GaussOutput = self.encode_fn(sent2)
-            return asymmetrical_kl_sim(sent1.mu, sent1.std, sent2.mu, sent2.std).item()
+            return asymmetrical_kl_sim(sent1.mu, sent1.std, sent2.mu, sent2.std).item() / TEMPERATURE
 
     @torch.inference_mode()
     def encode_fn(self, sentence: str, **_) -> GaussOutput:
