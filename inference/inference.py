@@ -14,7 +14,7 @@ class Inference:
 
         self.tokenizer: PreTrainedTokenizer = AutoTokenizer.from_pretrained(MODEL_NAME, model_max_length = MAX_SEQ_LEN, use_fast = False)
         
-        self.sentences1 = ["10 september 2023", "11 september 2023", "13 september 2023", "15 september 2023", "15 march 2023"]
+        self.sentences1 = ["10 september 2023", "11 september 2023", "13 september 2023", "15 september 2023", "15 march 2023", "12 september 2023"]
         self.sentences2 = ["12 september 2023"] * len(self.sentences1)
         self.scores = [0.0] * len(self.sentences1)
 
