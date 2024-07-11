@@ -13,7 +13,9 @@ with input_file_path.open("r") as f:
         writer.writerow(["sent0", "sent1", "score"])
         for line in input_data:
             line[0] = line[0].replace(";", "")
+            line[0] = line[0].replace('"', '')
             line[1] = line[1].replace(";", "")
+            line[1] = line[1].replace('"', '')
             if ";" in line[0]+line[1]:
                 print(line)
             writer.writerow(line)

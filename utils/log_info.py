@@ -1,7 +1,7 @@
 from pathlib import Path
 import pandas as pd
 
-def log_info(data: dict, path: Path | str):
+def log_info(data: dict, path: Path):
     path = Path(path)
     path.parent.mkdir(parents=True, exist_ok=True)
 
