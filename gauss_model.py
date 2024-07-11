@@ -28,7 +28,8 @@ class GaussModel(nn.Module):
     def forward(self, input_ids, attention_mask, **_) -> GaussOutput:
         outputs: BaseModelOutput = self.backbone(input_ids=input_ids, attention_mask=attention_mask)
 
-        emb = self.mean_pooling(outputs, attention_mask)
+        # emb = self.mean_pooling(outputs, attention_mask)
+        emb = outputs.last_hidden_state[:, 0]
 
         mu = self.w_mu(emb)
         mu = self.activation(mu)
