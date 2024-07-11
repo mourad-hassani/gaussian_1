@@ -1,4 +1,3 @@
-from gauss_model import GaussOutput
 import torch
 from torch import distributions
 
@@ -12,7 +11,8 @@ def asymmetrical_kl_sim(mu1: torch.FloatTensor, std1: torch.FloatTensor, mu2: to
     p1 = distributions.normal.Normal(mu1, std1)
     p2 = distributions.normal.Normal(mu2, std2)
 
-    distance = distributions.kl.kl_divergence(p2, p1).mean(dim=-1)  
-    distance = torch.tanh(0.5 * distance)
+    distance = distributions.kl.kl_divergence(p1, p2).mean(dim=-1)  
     
-    return distance
+    similarity = 1 / (1 + distance)
+    
+    return similarity

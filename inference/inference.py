@@ -28,7 +28,7 @@ class Inference:
     def sim_fn(self, sent1: str, sent2: str) -> float:
             sent1: GaussOutput = self.encode_fn(sent1)
             sent2: GaussOutput = self.encode_fn(sent2)
-            return asymmetrical_kl_sim(sent1.mu, sent1.std, sent2.mu, sent2.std).item() / TEMPERATURE
+            return asymmetrical_kl_sim(sent1.mu, sent1.std, sent2.mu, sent2.std).item()
 
     @torch.inference_mode()
     def encode_fn(self, sentence: str, **_) -> GaussOutput:
