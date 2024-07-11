@@ -14,8 +14,8 @@ class Inference:
 
         self.tokenizer: PreTrainedTokenizer = AutoTokenizer.from_pretrained(MODEL_NAME, model_max_length = MAX_SEQ_LEN, use_fast = False)
         
-        self.sentences1 = ["2024", "september 2024", "january 2024", "october 2024"]
-        self.sentences2 = ["12 september 2024"] * len(self.sentences1)
+        self.sentences1 = ["[CLS] tomorrow [SEP] 10 june 2023 [SEP]", "[CLS] tomorrow [SEP] 29 june 2023 [SEP]", "[CLS] yesterday [SEP] 01 july 2023 [SEP]", "[CLS] 12 september 2023 [SEP] 11 july 2023 [SEP]"]
+        self.sentences2 = ["[CLS] 30 june 2023 [SEP] 11 july 2023 [SEP]"] * len(self.sentences1)
         self.scores = [0.0] * len(self.sentences1)
 
     def tokenize(self, batch: list[str]) -> BatchEncoding:

@@ -2,8 +2,8 @@ from pathlib import Path
 import json
 import csv
 
-input_file_path = Path("data/all_dataset/processed_one_sentence_list.json")
-output_file_path = Path("./data/all_dataset/dataset.csv")
+input_file_path = Path("data/base_dataset/base_dataset_close.json")
+output_file_path = Path("./data/base_dataset/dataset.csv")
 
 with input_file_path.open("r") as f:
     input_data = json.load(f)
