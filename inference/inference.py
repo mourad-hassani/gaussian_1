@@ -14,9 +14,9 @@ class Inference:
 
         self.tokenizer: PreTrainedTokenizer = AutoTokenizer.from_pretrained(MODEL_NAME, model_max_length = MAX_SEQ_LEN, use_fast = False)
         
-        self.sentences1 = ["[CLS] tomorrow [SEP] 10 june 2023 [SEP]", "[CLS] tomorrow [SEP] 29 june 2023 [SEP]", "[CLS] yesterday [SEP] 01 july 2023 [SEP]", "[CLS] 12 september 2023 [SEP] 11 july 2023 [SEP]"]
-        self.sentences2 = ["[CLS] 30 june 2023 [SEP] 11 july 2023 [SEP]"] * len(self.sentences1)
-        self.scores = [0.0] * len(self.sentences1)
+        self.sentences1 = ["[CLS] these next 25 months [SEP] 18 october 2023 [SEP]", "[CLS] tomorrow [SEP] 29 june 2023 [SEP]", "[CLS] yesterday [SEP] 01 july 2023 [SEP]", "[CLS] 12 september 2023 [SEP] 11 july 2023 [SEP]"]
+        self.sentences2 = ["[CLS] from 01 november 2025 to 30 november 2027 [SEP] 15 june 2024 [SEP]"] * len(self.sentences1)
+        self.scores = [1.0] * len(self.sentences1)
 
     def tokenize(self, batch: list[str]) -> BatchEncoding:
         return self.tokenizer(batch, padding=True, truncation=True, return_tensors="pt", max_length=MAX_SEQ_LEN, add_special_tokens=SPECIAL_TOKENS)
@@ -28,7 +28,7 @@ class Inference:
     def sim_fn(self, sent1: str, sent2: str) -> float:
             sent1: GaussOutput = self.encode_fn(sent1)
             sent2: GaussOutput = self.encode_fn(sent2)
-            return asymmetrical_kl_sim(sent1.mu, sent1.std, sent2.mu, sent2.std).item()
+            return asymmetrical_kl_sim(sent1.mu, sent1.std, sent2.mu, sent2.std).item() / TEMPERATURE
 
     @torch.inference_mode()
     def encode_fn(self, sentence: str, **_) -> GaussOutput:

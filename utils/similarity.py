@@ -11,7 +11,7 @@ def asymmetrical_kl_sim(mu1: torch.FloatTensor, std1: torch.FloatTensor, mu2: to
     p1 = distributions.normal.Normal(mu1, std1)
     p2 = distributions.normal.Normal(mu2, std2)
 
-    distance = distributions.kl.kl_divergence(p1, p2).mean(dim=-1)  
+    distance = distributions.kl.kl_divergence(p1, p2).mean(dim=-1)
     
     similarity = 1 / (1 + distance)
     
