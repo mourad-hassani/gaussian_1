@@ -2,6 +2,7 @@ import torch
 from torch import distributions
 
 from utils.math.tanh import tanh
+from parameters import TEMPERATURE
 
 def asymmetrical_kl_sim(mu1: torch.FloatTensor, std1: torch.FloatTensor, mu2: torch.FloatTensor, std2: torch.FloatTensor) -> torch.Tensor:
     """
@@ -15,4 +16,4 @@ def asymmetrical_kl_sim(mu1: torch.FloatTensor, std1: torch.FloatTensor, mu2: to
     
     similarity = 1 / (1 + distance)
     
-    return similarity
+    return similarity / TEMPERATURE
