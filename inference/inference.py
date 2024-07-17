@@ -13,9 +13,18 @@ class Inference:
         self.model.load_state_dict(torch.load('temporal_bert.pth', map_location=torch.device(INFERENCE_DEVICE)))
 
         self.tokenizer: PreTrainedTokenizer = AutoTokenizer.from_pretrained(MODEL_NAME, model_max_length = MAX_SEQ_LEN, use_fast = False)
+                
+        self.sentences2 = [
+            "[CLS] 12 june 2023 [SEP] 18 october 2023 [SEP]",
+            "[CLS] 20 june 2023 [SEP] 18 october 2023 [SEP]",
+            "[CLS] 01 june 2023 [SEP] 18 october 2023 [SEP]",
+            "[CLS] 16 june 2023 [SEP] 18 october 2023 [SEP]",
+            "[CLS] 15 june 2023 [SEP] 29 june 2023 [SEP]",
+            "[CLS] from 10 june 2023 to 15 june 2023 [SEP] 01 july 2023 [SEP]",
+            "[CLS] from 10 june 2024 to 15 june 2024 [SEP] 15 june 2023 [SEP]"
+        ]
         
-        self.sentences1 = ["[CLS] these next 25 months [SEP] 18 october 2023 [SEP]", "[CLS] tomorrow [SEP] 29 june 2023 [SEP]", "[CLS] yesterday [SEP] 01 july 2023 [SEP]", "[CLS] 12 september 2023 [SEP] 11 july 2023 [SEP]"]
-        self.sentences2 = ["[CLS] from 01 november 2025 to 30 november 2027 [SEP] 15 june 2024 [SEP]"] * len(self.sentences1)
+        self.sentences1 = ["[CLS] What drugs did the patient take these past 5 days? [SEP] 15 june 2023 [SEP]"] * len(self.sentences2)
         self.scores = [1.0] * len(self.sentences1)
 
     def tokenize(self, batch: list[str]) -> BatchEncoding:
@@ -24,7 +33,6 @@ class Inference:
     def data_loader(self, sentences: list[str]):
         return DataLoader(sentences, collate_fn=self.tokenize, batch_size=BATCH_SIZE, shuffle=False, num_workers=NUM_WORKERS, pin_memory=True, drop_last=False)
 
-    @torch.inference_mode()
     def sim_fn(self, sent1: str, sent2: str) -> float:
             sent1: GaussOutput = self.encode_fn(sent1)
             sent2: GaussOutput = self.encode_fn(sent2)
@@ -42,7 +50,6 @@ class Inference:
 
         return output
     
-    @torch.inference_mode()
     def evaluate(self) -> dict:
         similarities: list[float] = []
         
