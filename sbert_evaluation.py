@@ -18,7 +18,7 @@ logging.basicConfig(
 )
 
 model_name = "sentence-transformers/all-mpnet-base-v2"
-train_batch_size = 16
+train_batch_size = 32
 num_epochs = 1
 model_save_path = ("output/finetune-" + model_name + "-" + datetime.now().strftime("%Y-%m-%d_%H-%M-%S"))
 
