@@ -21,10 +21,13 @@ class Inference:
             "[CLS] 16 june 2023 [SEP] 18 october 2023 [SEP]",
             "[CLS] 15 june 2023 [SEP] 29 june 2023 [SEP]",
             "[CLS] from 10 june 2023 to 15 june 2023 [SEP] 01 july 2023 [SEP]",
-            "[CLS] from 10 june 2024 to 15 june 2024 [SEP] 15 june 2023 [SEP]"
+            "[CLS] from 10 june 2024 to 15 june 2024 [SEP] 15 june 2023 [SEP]",
+            "[CLS] The month of june 2024 [SEP] 15 june 2023 [SEP]",
+            "[CLS] What drugs did the patient take these past 5 days? [SEP] 15 june 2023 [SEP]",
         ]
         
         self.sentences1 = ["[CLS] What drugs did the patient take these past 5 days? [SEP] 15 june 2023 [SEP]"] * len(self.sentences2)
+        self.sentences1[-1] = "[CLS] The month of june 2024 [SEP] 15 june 2023 [SEP]"
         self.scores = [1.0] * len(self.sentences1)
 
     def tokenize(self, batch: list[str]) -> BatchEncoding:
