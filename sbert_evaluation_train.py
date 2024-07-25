@@ -1,16 +1,16 @@
 from torch.utils.data import DataLoader
 import math
-from sentence_transformers import SentenceTransformer, LoggingHandler, losses, util, InputExample
+from sentence_transformers import SentenceTransformer, LoggingHandler, losses, models, util
 from sentence_transformers.evaluation import EmbeddingSimilarityEvaluator
+from sentence_transformers.readers import InputExample
 import logging
 from datetime import datetime
 import os
 import json
-from pathlib import Path
 
 from parameters import MODEL_NAME
 
-dataset_path: Path = Path("data/base_dataset")
+dataset_path: str = "data/base_dataset"
 dataset_file_name = "base_dataset_close.json"
 
 logging.basicConfig(
@@ -18,11 +18,20 @@ logging.basicConfig(
 )
 
 model_name = MODEL_NAME
-train_batch_size = 32
+train_batch_size = 64
 num_epochs = 1
-model_save_path = ("output/finetune-" + model_name + "-" + datetime.now().strftime("%Y-%m-%d_%H-%M-%S"))
+model_save_path = ("output/train-" + model_name + "-" + datetime.now().strftime("%Y-%m-%d_%H-%M-%S"))
 
-model = SentenceTransformer(model_name)
+word_embedding_model = models.Transformer(model_name)
+
+pooling_model = models.Pooling(
+    word_embedding_model.get_word_embedding_dimension(),
+    pooling_mode_mean_tokens=False,
+    pooling_mode_cls_token=True,
+    pooling_mode_max_tokens=False,
+)
+
+model = SentenceTransformer(modules=[word_embedding_model, pooling_model])
 
 logging.info("Read train dataset")
 
@@ -31,7 +40,7 @@ dev_samples = []
 test_samples = []
 
 with open(os.path.join(dataset_path, dataset_file_name)) as f:
-    data = json.load(f)[:1000000]
+    data = json.load(f)
     for i, row in enumerate(data):
         inp_example = InputExample(texts=[row[0], row[1]], label=float(row[2]))
         if i < (0.9 * len(data)):
@@ -40,6 +49,7 @@ with open(os.path.join(dataset_path, dataset_file_name)) as f:
             dev_samples.append(inp_example)
         else:
             test_samples.append(inp_example)
+
 
 train_dataloader = DataLoader(train_samples, shuffle=True, batch_size=train_batch_size)
 train_loss = losses.CoSENTLoss(model=model)
