@@ -1,7 +1,19 @@
 from inference.inference import Inference
+import json
 
 def run_inference():
-    inference: Inference = Inference()
+    first_sentences = []
+    second_sentences = []
+    ground_truth = []
+
+    with open("data/base_dataset/asymmetric_dataset.json", "r", encoding="utf-8") as f:
+        data = json.load(f)
+        for element in data:
+            first_sentences.append(element[0])
+            second_sentences.append(element[1])
+            ground_truth.append(element[2])
+
+    inference: Inference = Inference(first_sentences, second_sentences, ground_truth)
     
     output = inference.evaluate()
 

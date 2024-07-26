@@ -8,27 +8,13 @@ from parameters import MODEL_NAME, INFERENCE_DEVICE, BATCH_SIZE, NUM_WORKERS, MA
 from utils.similarity import asymmetrical_kl_sim
 
 class Inference:
-    def __init__(self):
+    def __init__(self, sentences1: list[str], sentences2: list[str], scores: list[float]):
         self.model = GaussModel(MODEL_NAME, True).eval().to(INFERENCE_DEVICE)
         self.model.load_state_dict(torch.load('temporal_bert.pth', map_location=torch.device(INFERENCE_DEVICE)))
 
         self.tokenizer: PreTrainedTokenizer = AutoTokenizer.from_pretrained(MODEL_NAME, model_max_length = MAX_SEQ_LEN, use_fast = False)
-                
-        self.sentences2 = [
-            "[CLS] 12 june 2023 [SEP] 18 october 2023 [SEP]",
-            "[CLS] 20 june 2023 [SEP] 18 october 2023 [SEP]",
-            "[CLS] 01 june 2023 [SEP] 18 october 2023 [SEP]",
-            "[CLS] 16 june 2023 [SEP] 18 october 2023 [SEP]",
-            "[CLS] 15 june 2023 [SEP] 29 june 2023 [SEP]",
-            "[CLS] from 10 june 2023 to 15 june 2023 [SEP] 01 july 2023 [SEP]",
-            "[CLS] from 10 june 2024 to 15 june 2024 [SEP] 15 june 2023 [SEP]",
-            "[CLS] The month of june 2024 [SEP] 15 june 2023 [SEP]",
-            "[CLS] What drugs did the patient take these past 5 days? [SEP] 15 june 2023 [SEP]",
-        ]
-        
-        self.sentences1 = ["[CLS] What drugs did the patient take these past 5 days? [SEP] 15 june 2023 [SEP]"] * len(self.sentences2)
-        self.sentences1[-1] = "[CLS] The month of june 2024 [SEP] 15 june 2023 [SEP]"
-        self.scores = [1.0] * len(self.sentences1)
+
+        self.sentences1, self.sentences2, self.scores = sentences1, sentences2, scores
 
     def tokenize(self, batch: list[str]) -> BatchEncoding:
         return self.tokenizer(batch, padding=True, truncation=True, return_tensors="pt", max_length=MAX_SEQ_LEN, add_special_tokens=SPECIAL_TOKENS)

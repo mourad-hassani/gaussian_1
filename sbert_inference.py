@@ -15,36 +15,29 @@ class Colors:
 def print_colored(text, color):
     print(f"{color}{text}{Colors.RESET}")
 
-model_save_path = "sentence_transformers/all_mpnet"
+model_save_path = "sentence_transformers/bert"
 
-INPUT_FILE_PATH = "data/base_dataset/small_dataset.json"
+INPUT_FILE_PATH = "data/base_dataset/asymmetric_dataset.json"
 
 model = SentenceTransformer(model_save_path)
 
-corpus = []
+first_sentences = []
+second_sentences = []
 ground_truth = []
 
 with open(INPUT_FILE_PATH, "r", encoding="utf-8") as f:
-    data = json.load(f)[:5]
+    data = json.load(f)
     for element in data:
-        corpus.append(element[1])
+        first_sentences.append(element[0])
+        second_sentences.append(element[1])
         ground_truth.append(element[2])
 
-corpus_embeddings = model.encode(corpus, convert_to_tensor=True)
-
-queries = [data[0][0]]
-
-top_k = min(5, len(corpus))
-
-for query in queries:
-    query_embedding = model.encode(query, convert_to_tensor=True)
-    cosine_scores = util.cos_sim(query_embedding, corpus_embeddings)[0]
-    top_results = torch.topk(cosine_scores, k=top_k)
-
-    print(f"Query: {queries[0]}")
+for first_sentence, second_sentence in zip(first_sentences, second_sentences):
+    first_embedding = model.encode(first_sentence, convert_to_tensor=True)
+    second_embedding = model.encode(second_sentence, convert_to_tensor=True)
+    cosine_scores = util.cos_sim(first_embedding, second_embedding)[0]
     
-    for score, idx in zip(top_results[0], top_results[1]):
-        score_text = "(Score: {:.4f})".format(score)
-        print(corpus[idx], f" {score_text}")
-        print(ground_truth[idx])
-        print_colored(text=corpus[idx].split("[SEP]")[0].replace("[CLS]", "==============>"), color=Colors.BLUE if score > 0.9 else Colors.RED)
+    print(f"First sentence : {first_sentence}")
+    print(f"Second sentence : {second_sentence}")
+
+    print(f"Similarity : {cosine_scores.item()}")
