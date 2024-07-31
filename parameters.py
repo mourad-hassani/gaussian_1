@@ -1,7 +1,7 @@
 from pathlib import Path
 import torch
 
-MODEL_NAME: str = "bert-base-uncased"
+MODEL_NAME: str = "distilbert/distilbert-base-uncased"
 
 BATCH_SIZE: int = 64
 SHUFFLE: bool = False
