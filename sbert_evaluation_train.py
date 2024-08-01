@@ -8,7 +8,7 @@ from datetime import datetime
 import os
 import json
 
-from parameters import MODEL_NAME
+from parameters import MODEL_NAME, MAX_SEQ_LEN
 
 dataset_path: str = "data/base_dataset"
 dataset_file_name = "base_dataset_close.json"
@@ -22,7 +22,7 @@ train_batch_size = 64
 num_epochs = 1
 model_save_path = ("output/train-" + model_name + "-" + datetime.now().strftime("%Y-%m-%d_%H-%M-%S"))
 
-word_embedding_model = models.Transformer(model_name)
+word_embedding_model = models.Transformer(model_name, max_seq_length=MAX_SEQ_LEN)
 
 pooling_model = models.Pooling(
     word_embedding_model.get_word_embedding_dimension(),
